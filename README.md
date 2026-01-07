@@ -1,0 +1,3 @@
+# Happenix
+
+Event management application.
