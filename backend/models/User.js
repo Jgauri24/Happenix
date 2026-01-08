@@ -30,7 +30,7 @@ email:{
     city: { type: String }
 },
 bookmarks:[{
-    type:mongoose.Schema.types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:"Event"
 }],
 recentlyViewed:[{

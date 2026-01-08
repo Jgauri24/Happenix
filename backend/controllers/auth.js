@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/User.js"
+import Booking from "../models/Booking.js"
 import {generateToken} from "../utils/generateToken.js";
 
 export const registerUser=async(req,res,next)=>{
@@ -38,7 +39,7 @@ res.status(201).json({
     }
 }
 
-const express=express.Router();
+
 
 
 export const loginUser=async(req,res,next)=>{
