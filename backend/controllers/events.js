@@ -469,7 +469,7 @@ export const recentView= async (req, res, next) => {
     }
   };
   
-  export default eventControllers;
+
   
   
   
