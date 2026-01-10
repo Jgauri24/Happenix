@@ -1,8 +1,20 @@
 import axios from "axios";
 import { getToken, clearAuthState } from './storage';
 
-const api=axios.create({
-    baseURL:import.meta.env.VITE_API_URL || 'https://happenix-lcjl.onrender.com/api',
+const getBaseUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    const isProd = import.meta.env.PROD;
+    
+    // If in production and env var points to localhost, ignore it and use production URL
+    if (isProd && envUrl && envUrl.includes('localhost')) {
+        return 'https://happenix-lcjl.onrender.com/api';
+    }
+    
+    return envUrl || 'https://happenix-lcjl.onrender.com/api';
+};
+
+const api = axios.create({
+    baseURL: getBaseUrl(),
     headers: {
         'Content-Type': 'application/json',
       },
