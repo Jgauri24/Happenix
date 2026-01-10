@@ -1,6 +1,6 @@
 // Backend URL configuration
 export const getBackendUrl = () => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://happenix.vercel.app/';
     return apiUrl.replace('/api', '');
   };
   

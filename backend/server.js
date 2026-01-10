@@ -40,6 +40,7 @@ app.use(
         "http://localhost:5175",
         "http://localhost:5176",
         "http://localhost:5177",
+        "https://happenix.vercel.app/"
       ],
       credentials: true,
     })
