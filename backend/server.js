@@ -13,11 +13,15 @@ import eventRoutes from "./routes/events.js";
 import bookingRoutes from "./routes/bookings.js";
 import profileRoutes from "./routes/user.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { verifyConnection } from "./utils/notifications.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app=express()
+
+// Verify email connection
+verifyConnection();
 
 // Rate limiting
 const limiter = rateLimit({

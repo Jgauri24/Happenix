@@ -11,6 +11,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export const verifyConnection = async () => {
+  try {
+    await transporter.verify();
+    console.log("✅ Email service ready to send messages");
+    return true;
+  } catch (error) {
+    console.error("❌ Email service error:", error);
+    return false;
+  }
+};
+
 /**
  * Send booking confirmation email
  */
@@ -59,7 +70,7 @@ export const sendEventReminder = async (
 ) => {
   try {
     const mailOptions = {
-      from: `"Event Discovery" <${process.env.EMAIL_USER}>`,
+      from: `"HappeniX" <${process.env.EMAIL_USER}>`,
       to: userEmail,
       subject: `Reminder: ${eventTitle} is starting soon!`,
       html: `
