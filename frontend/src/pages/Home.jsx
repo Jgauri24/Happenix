@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowRight, QrCode, LayoutDashboard, Compass } from 'lucide-react';
 
 export default function Home() {
     return (
@@ -55,10 +55,39 @@ export default function Home() {
                             Never miss an event again. Easily sync your bookings with your favorite calendar apps.
                         </p>
                     </div>
+
+                    {/* New Features */}
+                    <div className="card text-center group hover:scale-105 transition-transform">
+                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <QrCode className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-4">Instant QR Entry</h3>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            Seamless entry with digital QR tickets. Forget printing, just scan and go.
+                        </p>
+                    </div>
+
+                    <div className="card text-center group hover:scale-105 transition-transform">
+                        <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <LayoutDashboard className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-4">Personal Dashboard</h3>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            Track your entire journey, view history, and manage your bookings in one place.
+                        </p>
+                    </div>
+
+                    <div className="card text-center group hover:scale-105 transition-transform">
+                        <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <Compass className="h-8 w-8 text-red-600 dark:text-red-400" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-4">Interactive Discovery</h3>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            Explore what's happening around you with our powerful map and search tools.
+                        </p>
+                    </div>
                 </div>
             </section>
-
-           
         </div>
     );
 }

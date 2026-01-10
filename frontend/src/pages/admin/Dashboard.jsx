@@ -74,34 +74,74 @@ export default function AdminDashboard() {
       {/* Charts */}
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Bookings Over Time */}
-        {stats.bookingsOverTime && stats.bookingsOverTime.length > 0 && (
+        {stats.bookingsOverTime && stats.bookingsOverTime.length > 0 ? (
           <div className="card">
-            <h2 className="text-xl font-bold mb-4">Bookings Over Time</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Bookings Over Time</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={stats.bookingsOverTime}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="count" stroke="#4f46e5" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis 
+                  dataKey="_id" 
+                  stroke="#6b7280"
+                  tick={{ fill: '#6b7280' }}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  tick={{ fill: '#6b7280' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#fff', 
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px'
+                  }}
+                />
+                <Line type="monotone" dataKey="count" stroke="#4f46e5" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="card">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Bookings Over Time</h2>
+            <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-gray-400">
+              No booking data available
+            </div>
           </div>
         )}
 
         {/* Top Categories */}
-        {stats.categoryStats && stats.categoryStats.length > 0 && (
+        {stats.categoryStats && stats.categoryStats.length > 0 ? (
           <div className="card">
-            <h2 className="text-xl font-bold mb-4">Top Categories</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Top Categories</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={stats.categoryStats}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#4f46e5" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis 
+                  dataKey="_id" 
+                  stroke="#6b7280"
+                  tick={{ fill: '#6b7280' }}
+                />
+                <YAxis 
+                  stroke="#6b7280"
+                  tick={{ fill: '#6b7280' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#fff', 
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px'
+                  }}
+                />
+                <Bar dataKey="count" fill="#4f46e5" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="card">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Top Categories</h2>
+            <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-gray-400">
+              No category data available
+            </div>
           </div>
         )}
       </div>

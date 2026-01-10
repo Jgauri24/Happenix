@@ -4,7 +4,7 @@ import api from '../utils/api';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import LoadingSkeleton from '../components/LoadingSkeleton';
-// import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
 import { getImageUrl } from '../utils/config';
 import toast from 'react-hot-toast';
 
@@ -17,8 +17,11 @@ export default function Bookings() {
     }
   });
 
-  const upcomingBookings = data?.filter(b => new Date(b.eventId.date) >= new Date()) || [];
-  const pastBookings = data?.filter(b => new Date(b.eventId.date) < new Date()) || [];
+  // Filter out cancelled AND attended bookings as per requirement
+  const activeBookings = data?.filter(b => b.status !== 'cancelled' && b.status !== 'attended' && !b.attendanceMarked) || [];
+
+  const upcomingBookings = activeBookings.filter(b => new Date(b.eventId.date) >= new Date());
+  const pastBookings = activeBookings.filter(b => new Date(b.eventId.date) < new Date());
 
   if (isLoading) {
     return (

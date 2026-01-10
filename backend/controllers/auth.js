@@ -70,10 +70,7 @@ res.json({
       email: user.email,
       role: user.role,
       location: user.location,
-      attendedCount: await Booking.countDocuments({
-        userId: user._id,
-        status: 'attended'
-      })
+      attendedCount: user.attendedCount
     },
   });
     }catch(Err){
@@ -93,10 +90,9 @@ res.json({success: true,
       location: user.location,
       bookmarks: user.bookmarks,
       recentlyViewed: user.recentlyViewed,
-      attendedCount: await Booking.countDocuments({
-        userId: req.user._id,
-        status: 'attended'
-      }) }})
+      attendedCount: user.attendedCount
+    }
+  });
     }catch(Err){
         next(Err)
     }

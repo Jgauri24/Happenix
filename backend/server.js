@@ -5,14 +5,33 @@ import dotenv from "dotenv";
 dotenv.config();
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
 import eventRoutes from "./routes/events.js";
 import bookingRoutes from "./routes/bookings.js";
 import profileRoutes from "./routes/user.js";
 import { errorHandler } from "./middleware/errorHandler.js";
-const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app=express()
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
+app.use(morgan("dev"));
 app.use(express.json());
+
+
+// Serve static files from uploads directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
     cors({
       origin: [

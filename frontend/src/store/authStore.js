@@ -62,8 +62,7 @@ const currState=get();
 const newUser={...currState.user,...userData}
 set({user:newUser})
 saveAuthState({user:newUser,token:currState.token})
-}
-,
+},
 loadUser:async()=>{
     try
    { const token=get().token

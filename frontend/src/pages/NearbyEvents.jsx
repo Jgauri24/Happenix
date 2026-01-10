@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function NearbyEvents() {
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'map'
+    const [recenterTrigger, setRecenterTrigger] = useState(0);
     const {
         location,
         loadingLocation,
@@ -81,7 +82,13 @@ export default function NearbyEvents() {
                         </button>
                         <button
                             type="button"
-                            onClick={requestLocation}
+                            onClick={() => {
+                                if (location.lat && location.lng) {
+                                    setRecenterTrigger(prev => prev + 1);
+                                } else {
+                                    requestLocation(false);
+                                }
+                            }}
                             className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 h-12 w-12 flex items-center justify-center rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
                             title="Use Current Location"
                         >
@@ -165,7 +172,7 @@ export default function NearbyEvents() {
                                 <div className="relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
                                     <div className="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl">
-                                        <MapView events={events} userLocation={location} />
+                                        <MapView events={events} userLocation={location} recenterTrigger={recenterTrigger} />
                                     </div>
                                     <div className="mt-6 flex items-center justify-center gap-6 flex-wrap">
                                         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
@@ -190,12 +197,20 @@ export default function NearbyEvents() {
                                 <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-8">
                                     We couldn't find any events nearby at the moment. Try searching for a different city or check back soon!
                                 </p>
-                                <button
-                                    onClick={() => setManualCity('')}
-                                    className="btn btn-secondary px-8 rounded-xl"
-                                >
-                                    Clear Search
-                                </button>
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => setManualLocation('')}
+                                        className="btn btn-secondary px-8 rounded-xl"
+                                    >
+                                        Clear Search
+                                    </button>
+                                    <button
+                                        onClick={() => requestLocation(false)}
+                                        className="btn btn-primary px-8 rounded-xl"
+                                    >
+                                        Use Current Location
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-24 px-6 text-center bg-gradient-to-b from-primary-50 to-white dark:from-primary-900/10 dark:to-transparent rounded-3xl">
@@ -206,7 +221,7 @@ export default function NearbyEvents() {
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <button
-                                        onClick={requestLocation}
+                                        onClick={() => requestLocation(false)}
                                         className="btn btn-primary px-8 h-14 rounded-2xl flex items-center gap-3 font-bold shadow-xl shadow-primary-500/20"
                                     >
                                         <Navigation className="h-5 w-5" />

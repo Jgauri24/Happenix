@@ -38,11 +38,12 @@ export const newBooking = async (req, res, next) => {
     }
 
     // Check if already booked
-    const existingBooking = await Booking.findOne({
+    let booking = await Booking.findOne({
       eventId,
       userId: req.user._id,
     });
-    if (existingBooking) {
+
+    if (booking && booking.status === 'confirmed') {
       return res
         .status(400)
         .json({
@@ -64,22 +65,36 @@ export const newBooking = async (req, res, next) => {
       }
     }
 
-    // Generate QR code
-    const bookingId = new Booking()._id.toString();
+    if (booking) {
+      // Reactivate cancelled booking
+      booking.status = 'confirmed';
+      booking.attendanceMarked = false; // Reset attendance if it was somehow marked
+      booking.qrCodeUrl = 'pending'; // verify this won't break client temporarily
+    } else {
+      // Create new booking
+      booking = new Booking({
+        eventId,
+        userId: req.user._id,
+        qrCodeUrl: 'pending',
+        qrCodeData: {},
+      });
+    }
+    
+    // Save first to ensure we have an ID (for new bookings)
+    await booking.save();
+
+    // Generate QR code with actual booking ID
     const qrData = await generateQRCode({
-      bookingId,
+      bookingId: booking._id.toString(),
       eventId: event._id.toString(),
       userId: req.user._id.toString(),
       timestamp: new Date(),
     });
 
-    // Create booking
-    const booking = await Booking.create({
-      eventId,
-      userId: req.user._id,
-      qrCodeUrl: qrData.qrCodeUrl,
-      qrCodeData: qrData.qrCodeData,
-    });
+    // Update booking with QR code data
+    booking.qrCodeUrl = qrData.qrCodeUrl;
+    booking.qrCodeData = qrData.qrCodeData;
+    await booking.save();
 
     // Add to event attendees
     event.attendees.push(req.user._id);
@@ -114,8 +129,11 @@ export const getUserBooking = async (req, res, next) => {
     const { status, upcoming } = req.query;
     const query = { userId: req.user._id };
 
+    // Filter out cancelled bookings by default
     if (status) {
       query.status = status;
+    } else {
+      query.status = { $ne: 'cancelled' };
     }
 
     let bookings = await Booking.find(query)
@@ -248,6 +266,11 @@ export const validateQR = async (req, res, next) => {
     booking.status = "attended";
     await booking.save();
 
+    // Increment user's attended count
+    await User.findByIdAndUpdate(booking.userId._id, {
+      $inc: { attendedCount: 1 }
+    });
+
     res.json({
       success: true,
       booking,
@@ -288,6 +311,11 @@ export const attended = async (req, res, next) => {
     booking.status = "attended";
     booking.attendanceMarked = true;
     await booking.save();
+
+    // Increment user's attended count
+    await User.findByIdAndUpdate(req.user._id, {
+      $inc: { attendedCount: 1 }
+    });
 
     res.json({
       success: true,

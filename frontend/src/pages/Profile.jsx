@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { User, Mail, MapPin, Save, Shield, Calendar, Camera } from 'lucide-react';
+import { User, Mail, MapPin, Save, Shield, Calendar } from 'lucide-react';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../store/authStore';
 import { format } from 'date-fns';
 
 export default function Profile() {
-  const { user, login } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
       name: user?.name || '',
       email: user?.email || '',
@@ -20,24 +20,46 @@ export default function Profile() {
     }
   });
 
+  // Reset form when user data changes or editing starts
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name || '',
+        email: user.email || '',
+        city: user.location?.city || ''
+      });
+    }
+  }, [user, reset]);
+
   const updateProfileMutation = useMutation({
     mutationFn: async (data) => {
       const res = await api.put('/users/profile', data);
       return res.data;
     },
     onSuccess: (data) => {
-      login(data.user, localStorage.getItem('token'));
+      // Update the auth store with the new user data
+      updateUser(data.user);
       toast.success('Profile updated successfully');
       setIsEditing(false);
       queryClient.invalidateQueries(['user']);
+      queryClient.invalidateQueries(['auth', 'me']);
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Update failed');
+      console.error('Profile update error:', error);
     }
   });
 
   const onSubmit = (data) => {
-    updateProfileMutation.mutate(data);
+    // Transform data to match backend expectations
+    const updateData = {
+      name: data.name,
+      email: data.email,
+      location: {
+        city: data.city || ''
+      }
+    };
+    updateProfileMutation.mutate(updateData);
   };
 
   const initials = user?.name
@@ -55,15 +77,20 @@ export default function Profile() {
 
             <div className="px-6 pb-6 text-center -mt-16">
               <div className="relative inline-block">
-                <div className="h-32 w-32 rounded-full bg-white dark:bg-gray-800 p-1 mx-auto shadow-lg">
-                  <div className="h-full w-full rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-4xl font-bold text-primary-600 dark:text-primary-400">
-                    {initials}
-                  </div>
+                <div className="h-32 w-32 rounded-full bg-white dark:bg-gray-800 p-1 mx-auto shadow-lg overflow-hidden">
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-4xl font-bold text-primary-600 dark:text-primary-400">
+                      {initials}
+                    </div>
+                  )}
                 </div>
-                {/* Placeholder for future avatar upload */}
-                <button className="absolute bottom-2 right-2 p-2 bg-primary-600 text-white rounded-full shadow hover:bg-primary-700 transition">
-                  <Camera className="h-4 w-4" />
-                </button>
+                {/* Camera/Upload removed as requested */}
               </div>
 
               <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">
@@ -71,8 +98,8 @@ export default function Profile() {
               </h2>
               <div className="flex items-center justify-center mt-2 space-x-2">
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${user?.role === 'admin'
-                    ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
-                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                  ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300'
+                  : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                   }`}>
                   {user?.role?.toUpperCase()}
                 </span>

@@ -1,5 +1,5 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import {useAuthStore} from '../store/authStore';
+import { useAuthStore } from '../store/authStore';
 
 import { Menu, X, Moon, Sun, Calendar, MapPin, User, LogOut, Settings, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -37,7 +37,7 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <nav className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -137,7 +137,7 @@ export default function Layout() {
               </button>
             </div>
 
-           {/* Mobile menu button  */}
+            {/* Mobile menu button  */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300"
@@ -229,12 +229,12 @@ export default function Layout() {
         )}
       </nav>
 
-      <main className="flex-grow">
+      <main className="flex-grow min-h-[calc(100vh-16rem)]">
         <Outlet />
       </main>
 
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center text-gray-600 dark:text-gray-400">
             <p>&copy; 2026 HappeninX. All rights reserved.</p>
           </div>

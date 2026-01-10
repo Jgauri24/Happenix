@@ -4,10 +4,8 @@ import { Download, Calendar, MapPin, Clock, X } from 'lucide-react';
 import api from '../utils/api';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import { QRCodeSVG } from 'qrcode.react';
-import { addToGoogleCalendar, downloadICS } from '../utils/calendar';
-// PDF generation would require jsPDF - commented out for now
-// import jsPDF from 'jspdf';
+import { QRCodeCanvas } from 'qrcode.react';
+import { addToGoogleCalendar } from '../utils/calendar';
 
 export default function BookingDetail() {
   const { id } = useParams();
@@ -33,34 +31,115 @@ export default function BookingDetail() {
     }
   });
 
+  const attendanceMutation = useMutation({
+    mutationFn: async () => {
+      await api.post(`/bookings/${id}/attend`);
+    },
+    onSuccess: () => {
+      toast.success('Attendance marked! Streak updated.');
+      queryClient.invalidateQueries(['booking', id]);
+      queryClient.invalidateQueries(['user']);
+      queryClient.invalidateQueries(['auth', 'me']);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to mark attendance');
+    }
+  });
+
   const downloadTicket = () => {
     if (!data) return;
-    
-    // Simple text-based ticket download
-    const event = data.eventId;
-    const ticketContent = `
-EVENT TICKET
-============
 
-Event: ${event.title}
-Date: ${format(new Date(event.date), 'MMM dd, yyyy')}
-Time: ${event.time}
-Location: ${event.type === 'online' ? 'Online' : event.city}
-Booking ID: ${data._id}
+    // Get the Canvas element directly
+    const sourceCanvas = document.getElementById('qr-code-canvas');
+    if (!sourceCanvas) {
+      toast.error('QR Code canvas not found');
+      return;
+    }
 
-Present this QR code at the event entrance.
-    `.trim();
+    // Get Data URL directly from the rendered canvas
+    const image64 = sourceCanvas.toDataURL('image/png');
 
-    const blob = new Blob([ticketContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ticket-${data._id}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    toast.success('Ticket downloaded');
+    // Create a new image for the QR
+    const qrImg = new Image();
+    qrImg.src = image64;
+
+    // Wait for image to load
+    qrImg.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Constants
+      const width = 600;
+      const padding = 40;
+      const lineHeight = 30;
+      const qrSize = 250; // Larger QR
+
+      const height = padding + 60 + (6 * lineHeight) + 40 + qrSize + 40 + padding;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw Black Background
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(0, 0, width, height);
+
+      // Set Text Styles
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px sans-serif';
+      let y = padding + 24;
+
+      // Draw Header
+      ctx.textAlign = 'left';
+      ctx.fillText('EVENT TICKET', padding, y);
+      y += 10;
+      ctx.fillRect(padding, y, width - (padding * 2), 2); // Underline
+      y += 40;
+
+      // Draw Details
+      ctx.font = 'bold 18px sans-serif';
+      ctx.fillText(`Event: ${event.title}`, padding, y);
+      y += lineHeight;
+
+      ctx.font = '16px sans-serif';
+      ctx.fillText(`Date: ${format(new Date(event.date), 'MMM dd, yyyy')}`, padding, y);
+      y += lineHeight;
+
+      ctx.fillText(`Time: ${event.time}`, padding, y);
+      y += lineHeight;
+
+      ctx.fillText(`Location: ${event.type === 'online' ? 'Online' : event.city}`, padding, y);
+      y += lineHeight;
+
+      ctx.fillText(`Booking ID: ${data._id}`, padding, y);
+      y += 50;
+
+      // Draw QR Code
+      // Draw a white background box for QR code to ensure readability
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect((width - qrSize) / 2 - 10, y - 10, qrSize + 20, qrSize + 20);
+      ctx.drawImage(qrImg, (width - qrSize) / 2, y, qrSize, qrSize);
+      y += qrSize + 40;
+
+      // Footer
+      ctx.font = 'italic 14px sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Present this QR code at the event entrance.', width / 2, y);
+
+      // Trigger download
+      const pngUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = pngUrl;
+      link.download = `ticket-${data._id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success('Ticket downloaded');
+    };
+
+    qrImg.onerror = () => {
+      toast.error('Failed to generate ticket image');
+    };
   };
 
   if (isLoading) {
@@ -104,7 +183,8 @@ Present this QR code at the event entrance.
         <div className="flex justify-center mb-8">
           <div className="bg-white p-4 rounded-lg">
             {data.qrCodeData && (
-              <QRCodeSVG
+              <QRCodeCanvas
+                id="qr-code-canvas"
                 value={JSON.stringify(data.qrCodeData)}
                 size={256}
                 level="H"
@@ -175,7 +255,7 @@ Present this QR code at the event entrance.
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4">
-          {isUpcoming && (
+          {isUpcoming ? (
             <>
               <button
                 onClick={downloadTicket}
@@ -184,7 +264,7 @@ Present this QR code at the event entrance.
                 <Download className="h-5 w-5 mr-2" />
                 Download PDF
               </button>
-              
+
               <button
                 onClick={() => addToGoogleCalendar(event)}
                 className="btn btn-secondary"
@@ -201,10 +281,34 @@ Present this QR code at the event entrance.
                 Cancel Booking
               </button>
             </>
+          ) : (
+            <>
+              <button
+                onClick={downloadTicket}
+                className="btn btn-secondary flex items-center justify-center"
+              >
+                <Download className="h-5 w-5 mr-2" />
+                Download Ticket
+              </button>
+
+              {data.status === 'attended' ? (
+                <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-6 py-3 rounded-lg font-bold flex items-center">
+                  <div className="mr-2">⚡</div> Attendance Marked
+                </div>
+              ) : (
+                <button
+                  onClick={() => attendanceMutation.mutate()}
+                  disabled={attendanceMutation.isPending || data.status === 'cancelled'}
+                  className="btn btn-primary flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 border-yellow-500 text-white"
+                >
+                  <div className="mr-2 font-bold text-lg">⚡</div>
+                  Mark Attendance & Increase Streak
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>
     </div>
   );
 }
-

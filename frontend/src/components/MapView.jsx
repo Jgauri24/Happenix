@@ -29,17 +29,17 @@ let UserIcon = L.divIcon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 // Helper component to update map view when center changes
-function ChangeView({ center, zoom }) {
+function ChangeView({ center, zoom, recenterTrigger }) {
     const map = useMap();
     useEffect(() => {
         if (center) {
-            map.setView(center, zoom);
+            map.flyTo(center, zoom);
         }
-    }, [center, zoom, map]);
+    }, [center, zoom, map, recenterTrigger]);
     return null;
 }
 
-export default function MapView({ events, userLocation }) {
+export default function MapView({ events, userLocation, recenterTrigger }) {
     const offlineEvents = events.filter(e => e.type === 'offline' && e.lat && e.lng);
 
     // Determine center: prioritize user location, then first event, then default
@@ -63,7 +63,7 @@ export default function MapView({ events, userLocation }) {
                 scrollWheelZoom={true}
                 style={{ height: '100%', width: '100%' }}
             >
-                <ChangeView center={center} zoom={zoom} />
+                <ChangeView center={center} zoom={zoom} recenterTrigger={recenterTrigger} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
