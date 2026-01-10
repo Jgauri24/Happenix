@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Events from "./pages/Events";
 import NearbyEvents from "./pages/NearbyEvents.jsx";
-import CreateEvent from "./pages/admin/createEvent.jsx";
+import CreateEvent from "./pages/admin/CreateEvent.jsx";
 import AdminDashboard from "./pages/admin/Dashboard.jsx";
 import AdminBookings from "./pages/admin/Bookings.jsx";
 import EditEvent from "./pages/admin/EditEvent.jsx";
