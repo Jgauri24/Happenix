@@ -2,15 +2,14 @@ import axios from "axios";
 import { getToken, clearAuthState } from './storage';
 
 const getBaseUrl = () => {
-    const envUrl = import.meta.env.VITE_API_URL;
-    const isProd = import.meta.env.PROD;
-    
-    // If in production and env var points to localhost, ignore it and use production URL
-    if (isProd && envUrl && envUrl.includes('localhost')) {
+    // 1. If running on a deployed domain (not localhost), ALWAYS use the production backend
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
         return 'https://happenix-lcjl.onrender.com/api';
     }
-    
-    return envUrl || 'https://happenix-lcjl.onrender.com/api';
+
+    // 2. If local, try to use the environment variable, otherwise fallback to production backend
+    //    This allows you to run frontend locally against the live backend if you want.
+    return import.meta.env.VITE_API_URL || 'https://happenix-lcjl.onrender.com/api';
 };
 
 const api = axios.create({
