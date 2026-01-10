@@ -11,6 +11,11 @@ import CreateEvent from './pages/admin/createEvent.jsx';
 import AdminDashboard from './pages/admin/Dashboard.jsx';
 import AdminBookings from './pages/admin/Bookings.jsx';
 import EditEvent from './pages/admin/EditEvent.jsx';
+import Bookings from './pages/Bookings.jsx';
+import BookingDetail from './pages/BookingDetail.jsx';
+import AdminEvents from './pages/admin/Events.jsx';
+
+import Profile from './pages/Profile';
 function PrivateRoute({ children }) {
   const { user } = useAuthStore();
   return user ? children : <Navigate to="/login" />;
@@ -31,7 +36,7 @@ function App() {
         <Route path="events/:id" element={<EventDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-      </Route>
+     
       <Route
           path="admin/events/create"
           element={
@@ -66,6 +71,39 @@ function App() {
             </AdminRoute>
           }
         />
+        <Route
+          path="bookings/:id"
+          element={
+            <PrivateRoute>
+              <BookingDetail/>
+            </PrivateRoute>
+          }
+        />
+          <Route
+          path="admin/events"
+          element={
+            <AdminRoute>
+              <AdminEvents />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="bookings"
+          element={
+            <PrivateRoute>
+              <Bookings />
+            </PrivateRoute>
+          }
+        />
+         <Route
+          path="profile"
+          element={
+            <PrivateRoute>
+     <Profile/>
+            </PrivateRoute>
+          }
+        />
+         </Route>
     </Routes>
     
   );
