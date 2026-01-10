@@ -101,25 +101,3 @@ res.json({success: true,
         next(Err)
     }
 }
-
-export const updateProfile=async(req,res,next)=>{
-    try{
-        const { name, location } = req.body;
-        const user=await User.findById(req.user._id)
-        if(name) user.name=name
-        if(location) user.location=location
-        await user.save()
-        res.json({
-            success: true,
-            user: {
-              id: user._id,
-              name: user.name,
-              email: user.email,
-              role: user.role,
-              location: user.location,
-            },
-          });
-    }catch(Err){
-        next(Err)
-    }
-}

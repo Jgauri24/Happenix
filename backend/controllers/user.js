@@ -1,10 +1,10 @@
-import express from 'express';
+
 import User from '../models/User.js';
 
 
 
 // Get user's bookmarked events
-const getbookmarked= async (req, res, next) => {
+export const getbookmarked= async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id).populate('bookmarks');
     res.json({
@@ -19,7 +19,7 @@ const getbookmarked= async (req, res, next) => {
 
 // Get user's recently viewed events
 
-const getrecentlyadded= async (req, res, next) => {
+export const getrecentlyadded= async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .populate('recentlyViewed.eventId')
@@ -42,6 +42,26 @@ const getrecentlyadded= async (req, res, next) => {
 };
 
 
-
+export const updateProfile=async(req,res,next)=>{
+  try{
+      const { name, location } = req.body;
+      const user=await User.findById(req.user._id)
+      if(name) user.name=name
+      if(location) user.location=location
+      await user.save()
+      res.json({
+          success: true,
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            location: user.location,
+          },
+        });
+  }catch(Err){
+      next(Err)
+  }
+}
 
 

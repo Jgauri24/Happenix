@@ -1,21 +1,21 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from './store/authStore';
-import Layout from './components/Layout.jsx';
-import Home from './pages/Home';
-import EventDetail from './pages/EventDetail';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Events from './pages/Events';
-import NearbyEvents from './pages/NearbyEvents.jsx';
-import CreateEvent from './pages/admin/createEvent.jsx';
-import AdminDashboard from './pages/admin/Dashboard.jsx';
-import AdminBookings from './pages/admin/Bookings.jsx';
-import EditEvent from './pages/admin/EditEvent.jsx';
-import Bookings from './pages/Bookings.jsx';
-import BookingDetail from './pages/BookingDetail.jsx';
-import AdminEvents from './pages/admin/Events.jsx';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuthStore } from "./store/authStore";
+import Layout from "./components/Layout.jsx";
+import Home from "./pages/Home";
+import EventDetail from "./pages/EventDetail";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Events from "./pages/Events";
+import NearbyEvents from "./pages/NearbyEvents.jsx";
+import CreateEvent from "./pages/admin/createEvent.jsx";
+import AdminDashboard from "./pages/admin/Dashboard.jsx";
+import AdminBookings from "./pages/admin/Bookings.jsx";
+import EditEvent from "./pages/admin/EditEvent.jsx";
+import Bookings from "./pages/Bookings.jsx";
+import BookingDetail from "./pages/BookingDetail.jsx";
+import AdminEvents from "./pages/admin/Events.jsx";
 
-import Profile from './pages/Profile';
+import Profile from "./pages/Profile";
 function PrivateRoute({ children }) {
   const { user } = useAuthStore();
   return user ? children : <Navigate to="/login" />;
@@ -23,7 +23,7 @@ function PrivateRoute({ children }) {
 
 function AdminRoute({ children }) {
   const { user } = useAuthStore();
-  return user?.role === 'admin' ? children : <Navigate to="/" />;
+  return user?.role === "admin" ? children : <Navigate to="/" />;
 }
 
 function App() {
@@ -36,8 +36,8 @@ function App() {
         <Route path="events/:id" element={<EventDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-     
-      <Route
+
+        <Route
           path="admin/events/create"
           element={
             <AdminRoute>
@@ -45,7 +45,7 @@ function App() {
             </AdminRoute>
           }
         />
-         
+
         <Route
           path="admin"
           element={
@@ -55,7 +55,7 @@ function App() {
           }
         />
 
-<Route
+        <Route
           path="admin/bookings"
           element={
             <AdminRoute>
@@ -63,7 +63,7 @@ function App() {
             </AdminRoute>
           }
         />
-         <Route
+        <Route
           path="admin/events/:id/edit"
           element={
             <AdminRoute>
@@ -75,11 +75,11 @@ function App() {
           path="bookings/:id"
           element={
             <PrivateRoute>
-              <BookingDetail/>
+              <BookingDetail />
             </PrivateRoute>
           }
         />
-          <Route
+        <Route
           path="admin/events"
           element={
             <AdminRoute>
@@ -95,18 +95,17 @@ function App() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="profile"
           element={
             <PrivateRoute>
-     <Profile/>
+              <Profile />
             </PrivateRoute>
           }
         />
-         </Route>
+      </Route>
     </Routes>
-    
   );
 }
 
-export default App
+export default App;
