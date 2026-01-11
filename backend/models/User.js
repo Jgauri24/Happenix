@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
   ],
   recentlyViewed: [
     {
-      eventID: { type: mongoose.Schema.Types.ObjectId, ref: "Event" },
+      eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event" },
       viewedAt: { type: Date, default: Date.now },
     },
   ],

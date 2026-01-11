@@ -80,7 +80,12 @@ res.json({
 
 export const mydata=async(req,res,next)=>{
     try{
-const user=await User.findById(req.user._id).populate("bookmarks")
+const user=await User.findById(req.user._id)
+  .populate("bookmarks")
+  .populate({
+    path: "recentlyViewed.eventId",
+    select: "title poster date price location city" 
+  });
 res.json({success: true,
     user: {
       id: user._id,

@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Users, ArrowRight, QrCode, LayoutDashboard, Compass } from 'lucide-react';
 
+import { useAuthStore } from '../store/authStore';
+
 export default function Home() {
+    const { user } = useAuthStore();
     return (
         <div className="space-y-20 pb-20">
             {/* Hero Section */}
@@ -15,12 +18,20 @@ export default function Home() {
                         The ultimate platform for finding, booking, and attending the best happenings in your city.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link to="/register" className="btn btn-primary text-lg px-8 py-4 flex items-center justify-center">
-                            Get Started <ArrowRight className="ml-2 h-5 w-5" />
-                        </Link>
-                        <Link to="/events" className="btn btn-secondary text-lg px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20">
-                            Browse Events
-                        </Link>
+                        {user ? (
+                            <Link to="/events" className="btn btn-primary text-lg px-8 py-4 flex items-center justify-center">
+                                Browse Events <ArrowRight className="ml-2 h-5 w-5" />
+                            </Link>
+                        ) : (
+                            <Link to="/register" className="btn btn-primary text-lg px-8 py-4 flex items-center justify-center">
+                                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+                            </Link>
+                        )}
+                        {!user && (
+                            <Link to="/events" className="btn btn-secondary text-lg px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20">
+                                Browse Events
+                            </Link>
+                        )}
                     </div>
                 </div>
             </section>

@@ -71,7 +71,7 @@ export default function Profile() {
       <div className="grid lg:grid-cols-3 gap-8">
 
         {/* Left Column: User Card */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-8">
           <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 relative">
             <div className="h-32 bg-gradient-to-r from-primary-500 to-indigo-600"></div>
 
@@ -117,6 +117,32 @@ export default function Profile() {
               </div>
             </div>
           </div>
+
+          {/* Recently Viewed (Mobile/Desktop Left) */}
+          {user?.recentlyViewed?.length > 0 && (
+            <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Recently Viewed</h3>
+              <div className="space-y-4">
+                {user.recentlyViewed.map((item, idx) => (
+                  item.eventId && (
+                    <a key={idx} href={`/events/${item.eventId._id || item.eventId}`} className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors group">
+                      <div className="h-10 w-10 rounded-md bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600">
+                        <Calendar className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
+                          {item.eventId.title || 'Event'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {item.viewedAt ? format(new Date(item.viewedAt), 'MMM dd, HH:mm') : ''}
+                        </p>
+                      </div>
+                    </a>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column: Edit Details */}
