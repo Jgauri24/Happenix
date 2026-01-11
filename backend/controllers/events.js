@@ -427,7 +427,7 @@ export const BookUnbook= async (req, res, next) => {
       const user = await User.findById(req.user._id);
       const eventId = req.params.id;
   
-      const index = user.bookmarks.indexOf(eventId);
+      const index = user.bookmarks.findIndex(id => id.toString() === eventId);
       if (index > -1) {
         user.bookmarks.splice(index, 1);
         await user.save();

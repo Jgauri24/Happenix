@@ -27,7 +27,7 @@ export default function BookingDetail() {
     onSuccess: () => {
       toast.success('Booking cancelled');
       queryClient.invalidateQueries(['bookings']);
-      navigate('/bookings');
+      queryClient.invalidateQueries(['booking', id]);
     }
   });
 
@@ -177,6 +177,11 @@ export default function BookingDetail() {
             {event.title}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">Your Event Ticket</p>
+          {data.status === 'cancelled' && (
+            <div className="mt-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-4 py-2 rounded-lg inline-block font-bold">
+              🚫 This booking has been cancelled
+            </div>
+          )}
         </div>
 
         {/* QR Code */}
@@ -274,11 +279,11 @@ export default function BookingDetail() {
 
               <button
                 onClick={() => cancelMutation.mutate()}
-                disabled={cancelMutation.isPending}
+                disabled={cancelMutation.isPending || data.status === 'cancelled'}
                 className="btn btn-danger flex items-center justify-center"
               >
                 <X className="h-5 w-5 mr-2" />
-                Cancel Booking
+                {data.status === 'cancelled' ? 'Booking Cancelled' : 'Cancel Booking'}
               </button>
             </>
           ) : (

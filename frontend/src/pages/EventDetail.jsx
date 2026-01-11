@@ -14,7 +14,7 @@ import { getImageUrl } from '../utils/config';
 export default function EventDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -50,6 +50,20 @@ export default function EventDetail() {
     },
     onSuccess: (data) => {
       toast.success(data.bookmarked ? 'Event bookmarked' : 'Bookmark removed');
+
+      // Update store immediately for instant UI feedback
+      const currentBookmarks = [...(user?.bookmarks || [])];
+      let newBookmarks;
+      if (data.bookmarked) {
+        newBookmarks = [...currentBookmarks, id];
+      } else {
+        newBookmarks = currentBookmarks.filter(b => {
+          const bId = typeof b === 'object' ? b._id : b;
+          return bId !== id;
+        });
+      }
+      updateUser({ bookmarks: newBookmarks });
+
       queryClient.invalidateQueries(['user', 'bookmarks']);
       queryClient.invalidateQueries(['auth', 'me']); // Refresh user data
     }
