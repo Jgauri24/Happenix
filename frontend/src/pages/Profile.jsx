@@ -118,74 +118,12 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Recently Viewed (Mobile/Desktop Left) */}
-          <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Recently Viewed</h3>
-            {user?.recentlyViewed?.length > 0 ? (
-              <div className="space-y-4">
-                {user.recentlyViewed.map((item, idx) => (
-                  item.eventId && (
-                    <a key={idx} href={`/events/${item.eventId._id || item.eventId}`} className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors group">
-                      <div className="h-10 w-10 rounded-md bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600">
-                        <Calendar className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
-                          {item.eventId.title || 'Event'}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {item.viewedAt ? format(new Date(item.viewedAt), 'MMM dd, HH:mm') : ''}
-                        </p>
-                      </div>
-                    </a>
-                  )
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Calendar className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                <p className="text-sm text-gray-500 dark:text-gray-400">No events viewed yet</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Browse events to see them here</p>
-              </div>
-            )}
-          </div>
 
-          {/* Bookmarked Events */}
-          <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Saved Events</h3>
-            {user?.bookmarks?.length > 0 ? (
-              <div className="space-y-4">
-                {user.bookmarks.map((event, idx) => (
-                  event && (
-                    <a key={idx} href={`/events/${event._id || event}`} className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors group">
-                      <div className="h-10 w-10 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
-                        <Save className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
-                          {event.title || 'Event'}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {event.date ? format(new Date(event.date), 'MMM dd, yyyy') : ''}
-                        </p>
-                      </div>
-                    </a>
-                  )
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Save className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                <p className="text-sm text-gray-500 dark:text-gray-400">No saved events yet</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Bookmark events to save them here</p>
-              </div>
-            )}
-          </div>
 
         </div>
 
         {/* Right Column: Edit Details */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-8">
           <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-8">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Account Settings</h3>
@@ -283,6 +221,70 @@ export default function Profile() {
                 </div>
               )}
             </form>
+          </div>
+
+          {/* Recently Viewed */}
+          <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Recently Viewed</h3>
+            {user?.recentlyViewed?.length > 0 ? (
+              <div className="space-y-4">
+                {user.recentlyViewed.map((item, idx) => (
+                  item.eventId && (
+                    <a key={idx} href={`/events/${item.eventId._id || item.eventId}`} className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors group">
+                      <div className="h-10 w-10 rounded-md bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600">
+                        <Calendar className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
+                          {item.eventId.title || 'Event'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {item.viewedAt ? format(new Date(item.viewedAt), 'MMM dd, HH:mm') : ''}
+                        </p>
+                      </div>
+                    </a>
+                  )
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Calendar className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                <p className="text-sm text-gray-500 dark:text-gray-400">No events viewed yet</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Browse events to see them here</p>
+              </div>
+            )}
+          </div>
+
+          {/* Bookmarked Events */}
+          <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Saved Events</h3>
+            {user?.bookmarks?.length > 0 ? (
+              <div className="space-y-4">
+                {user.bookmarks.map((event, idx) => (
+                  event && (
+                    <a key={idx} href={`/events/${event._id || event}`} className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors group">
+                      <div className="h-10 w-10 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                        <Save className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
+                          {event.title || 'Event'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {event.date ? format(new Date(event.date), 'MMM dd, yyyy') : ''}
+                        </p>
+                      </div>
+                    </a>
+                  )
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Save className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                <p className="text-sm text-gray-500 dark:text-gray-400">No saved events yet</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Bookmark events to save them here</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

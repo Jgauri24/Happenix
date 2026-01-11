@@ -51,6 +51,7 @@ export default function EventDetail() {
     onSuccess: (data) => {
       toast.success(data.bookmarked ? 'Event bookmarked' : 'Bookmark removed');
       queryClient.invalidateQueries(['user', 'bookmarks']);
+      queryClient.invalidateQueries(['auth', 'me']); // Refresh user data
     }
   });
 
