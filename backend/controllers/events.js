@@ -449,7 +449,7 @@ export const recentView= async (req, res, next) => {
       const eventId = req.params.id;
   
       user.recentlyViewed = user.recentlyViewed.filter(
-        item => item.eventId.toString() !== eventId
+        item => item.eventId && item.eventId.toString() !== eventId
       );
   
       user.recentlyViewed.unshift({
