@@ -95,73 +95,92 @@ function BookingCard({ booking, isPast = false }) {
 
   return (
     <div className="card">
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex-1">
-          <Link
-            to={`/events/${event._id}`}
-            className="text-xl font-bold text-gray-900 dark:text-white hover:text-primary-600 mb-2 block"
-          >
-            {event.title}
-          </Link>
-          <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-2" />
-              {format(new Date(event.date), 'MMM dd, yyyy')} at {event.time}
+      <div className="flex flex-col sm:flex-row gap-6 mb-4">
+        {/* Thumbnail */}
+        <div className="w-full sm:w-32 h-32 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 shrink-0">
+          {event.poster ? (
+            <img src={getImageUrl(event.poster)} alt={event.title} className="w-full h-full object-cover" />
+          ) : booking.qrCodeUrl ? (
+            <div className="w-full h-full bg-white p-2 flex items-center justify-center">
+              <img src={getImageUrl(booking.qrCodeUrl)} alt="QR" className="w-full h-full object-contain" />
             </div>
-            {isOnline ? (
-              <div className="flex items-center">
-                <span className="mr-2">🌐</span>
-                Online Event
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <MapPin className="h-4 w-4 mr-2" />
-                {event.city}
-              </div>
-            )}
-          </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-600">
+              <Calendar className="h-10 w-10 text-primary-400" />
+            </div>
+          )}
         </div>
-        <div className="flex flex-col gap-2">
-          <Link
-            to={`/bookings/${booking._id}`}
-            className="btn btn-primary text-sm whitespace-nowrap"
-          >
-            View Ticket
-          </Link>
 
-          {isPast && (
-            booking.status === 'attended' || booking.attendanceMarked ? (
-              <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                Attended
-              </span>
-            ) : (
-              <button
-                onClick={() => attendMutation.mutate()}
-                disabled={attendMutation.isPending}
-                className="btn btn-secondary text-sm whitespace-nowrap"
+        <div className="flex-1">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <Link
+                to={`/events/${event._id}`}
+                className="text-xl font-bold text-gray-900 dark:text-white hover:text-primary-600 mb-2 block"
               >
-                Mark Attended
-              </button>
-            )
-          )}
-        </div>
-      </div>
+                {event.title}
+              </Link>
+              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  {format(new Date(event.date), 'MMM dd, yyyy')} at {event.time}
+                </div>
+                {isOnline ? (
+                  <div className="flex items-center">
+                    <span className="mr-2">🌐</span>
+                    Online Event
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    {event.city}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Link
+                to={`/bookings/${booking._id}`}
+                className="btn btn-primary text-sm whitespace-nowrap"
+              >
+                View Ticket
+              </Link>
 
-      {/* QR Code Preview */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <QrCode className="h-4 w-4 mr-2" />
-            Ticket ID: {booking._id.slice(-8)}
+              {isPast && (
+                booking.status === 'attended' || booking.attendanceMarked ? (
+                  <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                    <CheckCircle className="h-3 w-3 mr-1" />
+                    Attended
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => attendMutation.mutate()}
+                    disabled={attendMutation.isPending}
+                    className="btn btn-secondary text-sm whitespace-nowrap"
+                  >
+                    Mark Attended
+                  </button>
+                )
+              )}
+            </div>
           </div>
-          {booking.qrCodeUrl && (
-            <img
-              src={getImageUrl(booking.qrCodeUrl)}
-              alt="QR Code"
-              className="h-16 w-16"
-            />
-          )}
+
+          {/* QR Code Preview */}
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <QrCode className="h-4 w-4 mr-2" />
+                Ticket ID: {booking._id.slice(-8)}
+              </div>
+              {booking.qrCodeUrl && (
+                <img
+                  src={getImageUrl(booking.qrCodeUrl)}
+                  alt="QR Code"
+                  className="h-16 w-16"
+                />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
