@@ -40,8 +40,12 @@ export default function EventCard({ event }) {
           )}
         </div>
       ) : (
-        <div className="h-48 mb-4 rounded-lg bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
-          <Calendar className="h-16 w-16 text-white opacity-50" />
+        <div className="relative h-48 mb-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+          <img
+            src="/placeholder.png"
+            alt="Event placeholder"
+            className="w-full h-full object-cover opacity-70"
+          />
         </div>
       )}
 

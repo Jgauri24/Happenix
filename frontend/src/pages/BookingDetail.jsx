@@ -178,8 +178,10 @@ export default function BookingDetail() {
           </h1>
           <p className="text-gray-600 dark:text-gray-400">Your Event Ticket</p>
           {data.status === 'cancelled' && (
-            <div className="mt-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-4 py-2 rounded-lg inline-block font-bold">
-              🚫 This booking has been cancelled
+            <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-xl">
+              <p className="text-red-600 dark:text-red-400 font-bold text-lg flex items-center justify-center gap-2">
+                <X className="h-6 w-6" /> This booking has been cancelled and is no longer valid.
+              </p>
             </div>
           )}
         </div>
