@@ -124,12 +124,8 @@ export default function EventDetail() {
               />
             </div>
           ) : (
-            <div className="mb-6 h-96 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
-              <img
-                src="/placeholder.png"
-                alt="Event placeholder"
-                className="w-full h-full object-cover opacity-70"
-              />
+            <div className="mb-6 h-96 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+              <Calendar className="h-24 w-24 text-white opacity-50" />
             </div>
           )}
 
