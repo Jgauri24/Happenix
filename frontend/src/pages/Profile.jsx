@@ -118,6 +118,7 @@ export default function Profile() {
             </div>
           </div>
 
+
           {/* Recently Viewed (Mobile/Desktop Left) */}
           {user?.recentlyViewed?.length > 0 && (
             <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
@@ -143,6 +144,33 @@ export default function Profile() {
               </div>
             </div>
           )}
+
+          {/* Bookmarked Events */}
+          {user?.bookmarks?.length > 0 && (
+            <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Saved Events</h3>
+              <div className="space-y-4">
+                {user.bookmarks.map((event, idx) => (
+                  event && (
+                    <a key={idx} href={`/events/${event._id || event}`} className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 rounded-lg transition-colors group">
+                      <div className="h-10 w-10 rounded-md bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                        <Save className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
+                          {event.title || 'Event'}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {event.date ? format(new Date(event.date), 'MMM dd, yyyy') : ''}
+                        </p>
+                      </div>
+                    </a>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* Right Column: Edit Details */}
