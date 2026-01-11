@@ -118,11 +118,10 @@ export default function Profile() {
             </div>
           </div>
 
-
           {/* Recently Viewed (Mobile/Desktop Left) */}
-          {user?.recentlyViewed?.length > 0 && (
-            <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Recently Viewed</h3>
+          <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Recently Viewed</h3>
+            {user?.recentlyViewed?.length > 0 ? (
               <div className="space-y-4">
                 {user.recentlyViewed.map((item, idx) => (
                   item.eventId && (
@@ -142,13 +141,19 @@ export default function Profile() {
                   )
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="text-center py-8">
+                <Calendar className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                <p className="text-sm text-gray-500 dark:text-gray-400">No events viewed yet</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Browse events to see them here</p>
+              </div>
+            )}
+          </div>
 
           {/* Bookmarked Events */}
-          {user?.bookmarks?.length > 0 && (
-            <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Saved Events</h3>
+          <div className="card bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Saved Events</h3>
+            {user?.bookmarks?.length > 0 ? (
               <div className="space-y-4">
                 {user.bookmarks.map((event, idx) => (
                   event && (
@@ -168,8 +173,14 @@ export default function Profile() {
                   )
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="text-center py-8">
+                <Save className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                <p className="text-sm text-gray-500 dark:text-gray-400">No saved events yet</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Bookmark events to save them here</p>
+              </div>
+            )}
+          </div>
 
         </div>
 
