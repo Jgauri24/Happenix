@@ -2,13 +2,16 @@ import nodemailer from "nodemailer";
 
 // Email transporter configuration
 const emailConfig = {
-  host: process.env.EMAIL_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.EMAIL_PORT || "465"),
-  secure: true, // true for 465, false for other ports
+  service: "gmail", // Automatically sets host to smtp.gmail.com and port to 465
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  logger: true, // Log SMTP traffic
+  debug: true,  // Include debug info
+  connectionTimeout: 30000, // 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
 };
 
 console.log(`📧 Attempting email connection to: ${emailConfig.host}:${emailConfig.port} with user: ${emailConfig.auth.user}`);
