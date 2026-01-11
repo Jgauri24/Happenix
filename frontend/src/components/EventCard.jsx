@@ -89,7 +89,7 @@ export default function EventCard({ event }) {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between pt-2">
             <div className="flex items-center">
               <DollarSign className="h-4 w-4 mr-1" />
               <span className="font-semibold">

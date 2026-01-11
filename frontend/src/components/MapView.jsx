@@ -43,16 +43,18 @@ export default function MapView({ events, userLocation, recenterTrigger }) {
     const offlineEvents = events.filter(e => e.type === 'offline' && e.lat && e.lng);
 
     // Determine center: prioritize user location, then first event, then default
-    let center = [28.6139, 77.2090]; // Default to Delhi
+    let center = [28.6139, 77.2090]; // Default to Delhi center
     let zoom = 10;
 
     if (userLocation?.lat && userLocation?.lng) {
         center = [userLocation.lat, userLocation.lng];
         zoom = 12;
     } else if (offlineEvents.length > 0) {
+        // Calculate the geographic average center of all events currently shown
         const centerLat = offlineEvents.reduce((sum, e) => sum + e.lat, 0) / offlineEvents.length;
         const centerLng = offlineEvents.reduce((sum, e) => sum + e.lng, 0) / offlineEvents.length;
         center = [centerLat, centerLng];
+        zoom = 11;
     }
 
     return (
