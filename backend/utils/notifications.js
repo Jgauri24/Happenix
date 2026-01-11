@@ -1,15 +1,19 @@
 import nodemailer from "nodemailer";
 
 // Email transporter configuration
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: false,
+const emailConfig = {
+  host: process.env.EMAIL_HOST || "smtp.gmail.com",
+  port: parseInt(process.env.EMAIL_PORT || "587"),
+  secure: false, // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "jindalsonia52@gmail.com",
+    pass: "1234556"
   },
-});
+};
+
+console.log(`📧 Attempting email connection to: ${emailConfig.host}:${emailConfig.port} with user: ${emailConfig.auth.user}`);
+
+const transporter = nodemailer.createTransport(emailConfig);
 
 export const verifyConnection = async () => {
   try {
