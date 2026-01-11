@@ -2,34 +2,32 @@ import nodemailer from "nodemailer";
 
 // Email transporter configuration
 const emailConfig = {
-  host: "smtp.gmail.com", // Force host
-  port: 465, // Force port
+  host: "smtp.gmail.com",
+  port: 465, 
   secure: true, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  tls: {
-    // frequent fix for cloud timeout issues
-    rejectUnauthorized: false
-  },
-  family: 4, // Force IPv4
-  logger: true,
-  debug: true,
-  connectionTimeout: 10000, 
+  tls: { rejectUnauthorized: false },
 };
-
-console.log(`📧 Configured email: ${emailConfig.host}:${emailConfig.port} (IPv4)`);
 
 const transporter = nodemailer.createTransport(emailConfig);
 
+// Global flag to track email health
+let emailSystemHealthy = false;
+
 export const verifyConnection = async () => {
   try {
+    console.log("📧 Verifying email connection...");
     await transporter.verify();
-    console.log("✅ Email service ready to send messages");
+    console.log("✅ Email service ready");
+    emailSystemHealthy = true;
     return true;
   } catch (error) {
-    console.error("❌ Email service error:", error);
+    console.error("⚠️ Email service failed verification (Timeouts expected on some clouds). Email features will be disabled.");
+    // Do NOT log full error stack to keep logs clean
+    emailSystemHealthy = false;
     return false;
   }
 };
@@ -43,6 +41,12 @@ export const sendBookingConfirmation = async (
   eventTitle,
   qrCodeUrl
 ) => {
+  // Fail silently if email system is down to prevent app crashes
+  if (!emailSystemHealthy) {
+    console.log("Example Email (Service Unavailable):", { to: userEmail, subject: `Booking Confirmed: ${eventTitle}` });
+    return;
+  }
+
   try {
     const mailOptions = {
       from: `"Event Discovery" <${process.env.EMAIL_USER}>`,
@@ -64,7 +68,6 @@ export const sendBookingConfirmation = async (
     console.log(`Booking confirmation email sent to ${userEmail}`);
   } catch (error) {
     console.error("Error sending booking confirmation email:", error);
-    // Don't throw - email failure shouldn't break booking
   }
 };
 
