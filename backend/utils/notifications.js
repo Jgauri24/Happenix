@@ -2,19 +2,24 @@ import nodemailer from "nodemailer";
 
 // Email transporter configuration
 const emailConfig = {
-  service: "gmail", // Automatically sets host to smtp.gmail.com and port to 465
+  host: "smtp.gmail.com", // Force host
+  port: 465, // Force port
+  secure: true, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  logger: true, // Log SMTP traffic
-  debug: true,  // Include debug info
-  connectionTimeout: 30000, // 30 seconds
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
+  tls: {
+    // frequent fix for cloud timeout issues
+    rejectUnauthorized: false
+  },
+  family: 4, // Force IPv4
+  logger: true,
+  debug: true,
+  connectionTimeout: 10000, 
 };
 
-console.log(`📧 Attempting email connection to: ${emailConfig.host}:${emailConfig.port} with user: ${emailConfig.auth.user}`);
+console.log(`📧 Configured email: ${emailConfig.host}:${emailConfig.port} (IPv4)`);
 
 const transporter = nodemailer.createTransport(emailConfig);
 
