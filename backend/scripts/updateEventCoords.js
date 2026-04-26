@@ -70,3 +70,5 @@ const updateCoords = async () => {
 };
 
 updateCoords();
+
+
