@@ -37,12 +37,7 @@ app.use(express.json());
 // Serve static files from uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(
-  cors({
-    origin: ["http://localhost:5173", "http://localhost:3000", "https://happenix-jigf.vercel.app"],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-  })
+  cors()
 );
 mongoose
   .connect(
