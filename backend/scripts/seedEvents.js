@@ -329,6 +329,51 @@ const events = [
     maxAttendees: 10000,
     status: "active",
     poster: "https://images.unsplash.com/photo-1514533212735-5df27d970db0?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Noida Tech Meetup",
+    description: "Connect with the local tech community in Noida. Share ideas and learn about new technologies.",
+    date: new Date("2026-06-15T18:00:00Z"),
+    time: "06:00 PM",
+    duration: 180,
+    type: "offline",
+    locationName: "Sector 62",
+    city: "Noida",
+    category: "Technology",
+    price: 0,
+    maxAttendees: 100,
+    status: "active",
+    poster: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Delhi Cultural Festival",
+    description: "A celebration of Delhi's rich culture and heritage. Features music, dance, and food from all over the city.",
+    date: new Date("2026-07-20T10:00:00Z"),
+    time: "10:00 AM",
+    duration: 480,
+    type: "offline",
+    locationName: "India Gate",
+    city: "Delhi",
+    category: "Arts",
+    price: 10,
+    maxAttendees: 500,
+    status: "active",
+    poster: "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "Sonipat Startup Pitch",
+    description: "Pitch your startup idea to a panel of investors and mentors in Sonipat. Great networking opportunity.",
+    date: new Date("2026-08-10T14:00:00Z"),
+    time: "02:00 PM",
+    duration: 240,
+    type: "offline",
+    locationName: "O.P. Jindal Global University",
+    city: "Sonipat",
+    category: "Business",
+    price: 0,
+    maxAttendees: 200,
+    status: "active",
+    poster: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
